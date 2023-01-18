@@ -9,6 +9,8 @@ import { Button, Checkbox, Heading, MultiStep, Text, TextInput } from '@ignite-u
 import { ArrowRight } from 'phosphor-react';
 import { Container, Header } from '../styles';
 import { FormError, IntervalBox, IntervalDay, IntervalInputs, IntervalItem, IntervalsContainer } from './styles';
+import { ConvertTimeStringToMinutes } from '../../../utils/convert-time-string-to-minutes';
+import { api } from '../../../lib/axios';
 
 const timeIntervalsFormSchema = z.object({
 	intervals: z
@@ -24,10 +26,26 @@ const timeIntervalsFormSchema = z.object({
 		.transform((intervals) => intervals.filter((interval) => interval.enabled === true))
 		.refine((intervals) => intervals.length > 0, {
 			message: 'Você precisa selecionar pelo menos um dia da semana!',
-		}),
+		})
+		.transform((intervals) =>
+			intervals.map((interval) => {
+				return {
+					weekDay: interval.weekDay,
+					startTimeInMinutes: ConvertTimeStringToMinutes(interval.startTime),
+					endTimeInMinutes: ConvertTimeStringToMinutes(interval.endTime),
+				};
+			})
+		)
+		.refine(
+			(intervals) => {
+				return intervals.every((interval) => interval.endTimeInMinutes - 60 >= interval.startTimeInMinutes);
+			},
+			{ message: 'O horário de termino deve ser pelo menos 1h distante do início.' }
+		),
 });
 
-type TimeIntervalsFormData = z.infer<typeof timeIntervalsFormSchema>;
+type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>;
+type TimeIntervalsFormOutput = z.infer<typeof timeIntervalsFormSchema>;
 
 export default function TimeIntervals() {
 	const {
@@ -36,7 +54,7 @@ export default function TimeIntervals() {
 		control,
 		watch,
 		formState: { errors, isSubmitting },
-	} = useForm<TimeIntervalsFormData>({
+	} = useForm<TimeIntervalsFormInput>({
 		resolver: zodResolver(timeIntervalsFormSchema),
 		defaultValues: {
 			intervals: [
@@ -60,8 +78,14 @@ export default function TimeIntervals() {
 
 	const intervals = watch('intervals');
 
-	async function handleSelectTimeIntervals(data: TimeIntervalsFormData) {
-		console.log(data);
+	async function handleSelectTimeIntervals(data: TimeIntervalsFormOutput) {
+		try {
+			const { intervals } = data;
+
+			const { data: dataResult } = await api.post('/users/time-intervals', { intervals });
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	return (
