@@ -11,6 +11,7 @@ import { Container, Header } from '../styles';
 import { FormError, IntervalBox, IntervalDay, IntervalInputs, IntervalItem, IntervalsContainer } from './styles';
 import { ConvertTimeStringToMinutes } from '../../../utils/convert-time-string-to-minutes';
 import { api } from '../../../lib/axios';
+import { useRouter } from 'next/router';
 
 const timeIntervalsFormSchema = z.object({
 	intervals: z
@@ -40,7 +41,9 @@ const timeIntervalsFormSchema = z.object({
 			(intervals) => {
 				return intervals.every((interval) => interval.endTimeInMinutes - 60 >= interval.startTimeInMinutes);
 			},
-			{ message: 'O horário de termino deve ser pelo menos 1h distante do início.' }
+			{
+				message: 'O horário de termino deve ser pelo menos 1h distante do início.',
+			}
 		),
 });
 
@@ -69,6 +72,8 @@ export default function TimeIntervals() {
 		},
 	});
 
+	const router = useRouter();
+
 	const weekDays = getWeekDays();
 
 	const { fields } = useFieldArray({
@@ -82,7 +87,11 @@ export default function TimeIntervals() {
 		try {
 			const { intervals } = data;
 
-			const { data: dataResult } = await api.post('/users/time-intervals', { intervals });
+			await api.post('/users/time-intervals', {
+				intervals,
+			});
+
+			await router.push('/register/update-profile');
 		} catch (error) {
 			console.log(error);
 		}

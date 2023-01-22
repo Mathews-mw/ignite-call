@@ -10,6 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	const { name, username } = req.body;
 
+	console.log('handler user route: ', req.body);
+
 	const userExists = await prisma.user.findUnique({
 		where: {
 			username,
