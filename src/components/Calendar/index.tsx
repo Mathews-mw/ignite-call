@@ -101,7 +101,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
 				return { date, disabled: true };
 			}),
 			...daysInMonthArray.map((date) => {
-				return { date, disabled: date.endOf('day').isBefore(new Date()) || blockedDates?.blockedWeekDays.includes(date.get('day')) || blockedDates.blckedDates.includes(date.get('date')) };
+				return { date, disabled: date.endOf('day').isBefore(new Date()) || blockedDates?.blockedWeekDays.includes(date.get('day')) || blockedDates?.blckedDates?.includes(date.get('date')) };
 			}),
 			...nextMonthFillArray.map((date) => {
 				return { date, disabled: true };

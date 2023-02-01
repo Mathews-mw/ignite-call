@@ -1,19 +1,19 @@
 import { z } from 'zod';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { GetServerSideProps } from 'next';
+import { useSession } from 'next-auth/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { unstable_getServerSession } from 'next-auth';
 
-import { buildNextAuthOptions } from '../../api/auth/[...nextauth].api';
-
 import { Avatar, Button, Heading, MultiStep, Text, TextArea } from '@ignite-ui/react';
+
+import { api } from '../../../lib/axios';
+import { buildNextAuthOptions } from '../../api/auth/[...nextauth].api';
 
 import { ArrowRight } from 'phosphor-react';
 import { Container, Header } from '../styles';
 import { FormAnnotation, ProfileBox } from './styles';
-import { useSession } from 'next-auth/react';
-import { api } from '../../../lib/axios';
-import { useRouter } from 'next/router';
 
 const updateProfileFormSchema = z.object({
 	bio: z.string(),
@@ -39,7 +39,7 @@ export default function UpdateProfile() {
 				bio: data.bio,
 			});
 
-			await router.push(`/schedule/${session.data?.user.name}`);
+			await router.push(`/schedule/${session.data?.user.username}`);
 		} catch (error) {
 			console.log(error);
 		}
