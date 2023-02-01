@@ -14,7 +14,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 		return res.status(405).end();
 	}
 
-	console.log(req.body);
 	const session = await unstable_getServerSession(req, res, buildNextAuthOptions(req, res));
 
 	if (!session) {
