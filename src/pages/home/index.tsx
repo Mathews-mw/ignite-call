@@ -1,5 +1,5 @@
 import { Heading, Text } from '@ignite-ui/react';
-import { NextSeo } from 'next-seo/lib/meta/nextSEO';
+import { NextSeo } from 'next-seo';
 import Image from 'next/image';
 
 import previewImage from '../../assets/app-preview.png';
