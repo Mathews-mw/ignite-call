@@ -7,6 +7,7 @@ import { ArrowRight, Check } from 'phosphor-react';
 
 import { Container, Header } from '../styles';
 import { AuthError, ConnectBox, ConnectItem } from './styles';
+import { NextSeo } from 'next-seo';
 
 export default function ConnectCalendar() {
 	const session = useSession();
@@ -24,39 +25,43 @@ export default function ConnectCalendar() {
 	}
 
 	return (
-		<Container>
-			<Header>
-				<Heading as='strong'>Conecte sua agenda!</Heading>
+		<>
+			<NextSeo title='Conecte sua agenda do Google | Ignite Call' noindex />
 
-				<Text>Conecte o seu calendário para verificar automaticamente as horas ocupadas e os novos eventos à medida em que são agendados.</Text>
+			<Container>
+				<Header>
+					<Heading as='strong'>Conecte sua agenda!</Heading>
 
-				<MultiStep size={4} currentStep={2} />
-			</Header>
+					<Text>Conecte o seu calendário para verificar automaticamente as horas ocupadas e os novos eventos à medida em que são agendados.</Text>
 
-			<ConnectBox>
-				<ConnectItem>
-					<Text>Google Calendar</Text>
+					<MultiStep size={4} currentStep={2} />
+				</Header>
 
-					{isSigedIn ? (
-						<Button size='sm' disabled>
-							Conectado
-							<Check />
-						</Button>
-					) : (
-						<Button variant='secondary' size='sm' onClick={handleConnectCalendar}>
-							Conectar
-							<ArrowRight />
-						</Button>
-					)}
-				</ConnectItem>
+				<ConnectBox>
+					<ConnectItem>
+						<Text>Google Calendar</Text>
 
-				{hasAuthError && <AuthError size='sm'>Falha ao se conectar ao Google, verifique se você habilitou as permissões de acesso ao Google Calendar.</AuthError>}
+						{isSigedIn ? (
+							<Button size='sm' disabled>
+								Conectado
+								<Check />
+							</Button>
+						) : (
+							<Button variant='secondary' size='sm' onClick={handleConnectCalendar}>
+								Conectar
+								<ArrowRight />
+							</Button>
+						)}
+					</ConnectItem>
 
-				<Button type='submit' disabled={!isSigedIn} onClick={handleNavigateToNextStep}>
-					Próximo passo
-					<ArrowRight />
-				</Button>
-			</ConnectBox>
-		</Container>
+					{hasAuthError && <AuthError size='sm'>Falha ao se conectar ao Google, verifique se você habilitou as permissões de acesso ao Google Calendar.</AuthError>}
+
+					<Button type='submit' disabled={!isSigedIn} onClick={handleNavigateToNextStep}>
+						Próximo passo
+						<ArrowRight />
+					</Button>
+				</ConnectBox>
+			</Container>
+		</>
 	);
 }

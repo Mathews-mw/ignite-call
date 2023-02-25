@@ -5,6 +5,7 @@ import { prisma } from '../../../lib/prisma';
 import { Avatar, Heading, Text } from '@ignite-ui/react';
 import { Container, UserHeader } from './styles';
 import ScheduleForm from './ScheduleForm/index.page';
+import { NextSeo } from 'next-seo/lib/meta/nextSEO';
 
 interface ScheduleProps {
 	user: {
@@ -16,15 +17,18 @@ interface ScheduleProps {
 
 export default function Schedule({ user }: ScheduleProps) {
 	return (
-		<Container>
-			<UserHeader>
-				<Avatar src={user.avatarUrl} alt='Foto de perfil' />
-				<Heading>{user.name}</Heading>
-				<Text>{user.bio}</Text>
-			</UserHeader>
+		<>
+			<NextSeo title={`Agendar com ${user.name} | Ignite Call`} />
+			<Container>
+				<UserHeader>
+					<Avatar src={user.avatarUrl} alt='Foto de perfil' />
+					<Heading>{user.name}</Heading>
+					<Text>{user.bio}</Text>
+				</UserHeader>
 
-			<ScheduleForm />
-		</Container>
+				<ScheduleForm />
+			</Container>
+		</>
 	);
 }
 
